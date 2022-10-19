@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  btm-mysql:
+    container_name: btm-mysql-stage
+    ports:
+      - '33062:3306'
+
+  btm-php:
+    container_name: btm-php-stage
+    environment:
+      APP_ENV: prod
+      APP_VERSION: prod
+      DATABASE_URL: mysql://root:@btm-mysql:3306/btm_stage
+
+  btm-nginx:
+    container_name: btm-nginx-stage
+    ports:
+      - '8082:80'

@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  btm-mysql:
+    image: mysql:5.7
+    command: --sql_mode=""
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+    volumes:
+      - btm_db_data:/var/lib/mysql
+
+  btm-php:
+    build: docker/php-fpm
+    working_dir: /app
+    volumes:
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini:ro
+      - .:/app:cached
+    depends_on:
+      - btm-mysql
+
+  btm-nginx:
+    image: nginx:latest
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - .:/app:cached
+    depends_on:
+      - btm-php
+
+volumes:
+  btm_db_data:

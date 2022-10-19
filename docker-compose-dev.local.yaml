@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  btm-mysql:
+    container_name: btm-mysql-dev-local
+    ports:
+      - '33060:3306'
+  btm-php:
+    container_name: btm-php-dev-local
+    ports:
+      - '2222:22'
+    volumes:
+      - btm-api-vendor-sync:/app/vendor
+      - btm-api-app-sync:/app
+    environment:
+      APP_ENV: dev
+      APP_VERSION: dev
+      DATABASE_URL: mysql://root:@btm-mysql:3306/btm
+
+  btm-nginx:
+    container_name: btm-nginx-dev-local
+    ports:
+      - '9090:80'
+    volumes:
+      - btm-api-vendor-sync:/app/vendor
+      - btm-api-app-sync:/app
+
+volumes:
+  btm-api-vendor-sync:
+    external: true
+  btm-api-app-sync:
+    external: true
