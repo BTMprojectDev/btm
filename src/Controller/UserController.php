@@ -24,7 +24,7 @@ class UserController extends AbstractFOSRestController
     }
 
     /**
-     * @Rest\Get("", name="get_by_id")
+     * @Rest\Get("", name="get")
      *
      */
     public function getUserAction()
