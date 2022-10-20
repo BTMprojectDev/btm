@@ -24,8 +24,8 @@ class UserController extends AbstractFOSRestController
     }
 
     /**
-     * @Rest\Get("", name="get_by_id")
-     *
+     * @Rest\Get("", name="get")
+     * @Rest\View(serializerGroups={"get_user"})
      */
     public function getUserAction()
     {
