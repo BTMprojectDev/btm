@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TaskRepository::class)
@@ -14,26 +15,31 @@ class Task
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("task")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("task")
      */
     private $type;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("task")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("task")
      */
     private $location;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("task")
      */
     private $time;
 
