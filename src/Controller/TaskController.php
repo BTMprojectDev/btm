@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -20,13 +22,6 @@ class TaskController extends AbstractFOSRestController
     public function getTaskAction(Task $task)
     {
         return $task;
-    }
-
-    /**
-     * @Rest\Get("/byuser/{id}", name="asd")
-     */
-    public function asd (){
-
     }
 }
 
