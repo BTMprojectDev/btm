@@ -46,6 +46,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $tasks;
 
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $lat;
+
+    /**
+     * @ORM\Column(type="float")
+     */
+    private $lng;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $photoUrl;
+
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
@@ -166,6 +181,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $task->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLat(): ?float
+    {
+        return $this->lat;
+    }
+
+    public function setLat(float $lat): self
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    public function getLng(): ?float
+    {
+        return $this->lng;
+    }
+
+    public function setLng(float $lng): self
+    {
+        $this->lng = $lng;
+
+        return $this;
+    }
+
+    public function getPhotoUrl(): ?string
+    {
+        return $this->photoUrl;
+    }
+
+    public function setPhotoUrl(string $photoUrl): self
+    {
+        $this->photoUrl = $photoUrl;
 
         return $this;
     }
