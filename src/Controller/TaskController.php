@@ -18,6 +18,7 @@ class TaskController extends AbstractFOSRestController
     /**
      * @Rest\Get("/{id}", name="get_by_id")
      * @Rest\View(serializerGroups={"task"})
+     *
      */
     public function getTaskAction(Task $task)
     {
