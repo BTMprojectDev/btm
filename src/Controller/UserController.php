@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -44,7 +43,7 @@ class UserController extends AbstractFOSRestController
      * @Rest\Get("", name="get")
      * @Rest\View(serializerGroups={"get_user"})
      */
-    public function getUserAction()
+    public function user()
     {
         return $this->security->getUser();
     }
@@ -53,7 +52,7 @@ class UserController extends AbstractFOSRestController
      * @Rest\Get("/all", name="get_all")
      * @Rest\View(serializerGroups={"get_user"})
      */
-    public function getAllUserAction()
+    public function users()
     {
         return $this->userRepository->findAll();
     }
@@ -61,7 +60,7 @@ class UserController extends AbstractFOSRestController
     /**
      * @Rest\Delete("/{id}", name="delete_user_by_id")
      */
-    public function deleteUserAction(int $id)
+    public function delete(int $id)
     {
         $user = $this->userRepository->findOneBy(['id' => $id]);
         $this->managerRegistry->getManager()->remove($user);
@@ -70,28 +69,4 @@ class UserController extends AbstractFOSRestController
             Response::HTTP_OK
         );
     }
-
-
-    /**
-     * @Rest\Post("", name="create")
-     * @Rest\View()
-     * @ParamConverter("user", converter="fos_rest.request_body")
-     * @throws ORMException
-     */
-    public function postUserAction(User $user) : JsonResponse
-    {
-        $entityManager = $this->managerRegistry->getManager();
-        $plainPass = $user->getPassword();
-        $hashedPass = $this->passwordHasher->hashPassword(
-            $user,
-            $plainPass
-        );
-        $user->setPassword($hashedPass);
-        $entityManager->persist($user);
-        $entityManager->flush();
-
-
-        return new JsonResponse(null,Response::HTTP_CREATED);
-    }
-
 }
