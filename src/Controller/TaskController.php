@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Repository\TaskRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -15,13 +18,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class TaskController extends AbstractFOSRestController
 {
     private TaskRepository $taskRepository;
+    private EntityManager $entityManager;
 
     public function __construct
     (
-        TaskRepository $taskRepository,
+        EntityManager $entityManager,
+        TaskRepository $taskRepository
     )
     {
         $this->taskRepository = $taskRepository;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -40,6 +46,17 @@ class TaskController extends AbstractFOSRestController
     public function all()
     {
         return $this->taskRepository->findAll();
+    }
+
+    /**
+     * @Rest\Post("", name="post_new_task")
+     * @ParamConverter("task", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"task"}, "version"="1.0"}}))
+     */
+    public function add(Task $task)
+    {
+        $this->entityManager->persist($task);
+        $this->entityManager->flush();
+        return $task;
     }
 }
 
