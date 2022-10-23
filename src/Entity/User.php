@@ -65,16 +65,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("get_user")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("get_user")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="date_immutable")
+     * @Groups("get_user")
      */
     private $dateOfBirth;
 

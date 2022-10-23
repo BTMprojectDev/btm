@@ -41,7 +41,7 @@ class UserController extends AbstractFOSRestController
 
     /**
      * @Rest\Get("", name="get")
-     * @Rest\View(serializerGroups={"get_user"})
+     * @Rest\View(serializerGroups={"get_user"}, statusCode=Response::HTTP_OK)
      */
     public function user()
     {
@@ -50,7 +50,7 @@ class UserController extends AbstractFOSRestController
 
     /**
      * @Rest\Get("/all", name="get_all")
-     * @Rest\View(serializerGroups={"get_user"})
+     * @Rest\View(serializerGroups={"get_user"}, statusCode=Response::HTTP_OK)
      */
     public function users()
     {
@@ -59,6 +59,7 @@ class UserController extends AbstractFOSRestController
 
     /**
      * @Rest\Delete("/{id}", name="delete_user_by_id")
+     * @Rest\View(statusCode=Response::HTTP_NO_CONTENT)
      */
     public function delete(int $id)
     {
@@ -66,7 +67,12 @@ class UserController extends AbstractFOSRestController
         $this->managerRegistry->getManager()->remove($user);
         return new JsonResponse(
             null,
-            Response::HTTP_OK
+            Response::HTTP_NO_CONTENT
         );
+    }
+
+    public function putAction()
+    {
+        
     }
 }
