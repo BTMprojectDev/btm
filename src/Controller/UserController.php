@@ -9,6 +9,7 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,21 +23,21 @@ class UserController extends AbstractFOSRestController
 {
     private Security $security;
     private ManagerRegistry $managerRegistry;
-    private UserPasswordHasherInterface $passwordHasher;
     private UserRepository $userRepository;
+    private UserPasswordHasherInterface $userPasswordHasher;
 
     public function __construct
     (
         Security $security,
         ManagerRegistry $managerRegistry,
-        UserPasswordHasherInterface $passwordHasher,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        UserPasswordHasherInterface $userPasswordHasher
     )
     {
         $this->security = $security;
         $this->managerRegistry = $managerRegistry;
-        $this->passwordHasher = $passwordHasher;
         $this->userRepository = $userRepository;
+        $this->userPasswordHasher = $userPasswordHasher;
     }
 
     /**
@@ -71,8 +72,59 @@ class UserController extends AbstractFOSRestController
         );
     }
 
-    public function putAction()
+    /**
+     * @Rest\Put("/{id}", name="put_by_user_id")
+     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     */
+    public function put(int $id, Request $request)
     {
-        
+        $oldUser = $this->userRepository->find($id);
+        $newUser = $request->request->all();
+
+        dd();
+
+    }
+
+    /**
+     * @Rest\Patch("/{id}", name="patch_by_user_id")
+     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     */
+    public function patch(int $id, Request $request)
+    {
+        $oldUser = $this->userRepository->find($id);
+        $newUser = $request->request->all();
+        if($newUser['email']){
+            $oldUser->setEmail($newUser['email']);
+        }
+        if($newUser['password']){
+            $plainPassword = $newUser['password'];
+            $hashedPassword = $this->userPasswordHasher->hashPassword(
+                $oldUser,
+                $plainPassword
+            );
+            $oldUser->setPassword($hashedPassword);
+        }
+        if($newUser['lat']){
+            $oldUser->setLat($newUser['lat']);
+        }
+        if($newUser['lng']){
+            $oldUser->setLng($newUser['lng']);
+        }
+        if($newUser['photoUrl']){
+            $oldUser->setPhotoUrl($newUser['photoUrl']);
+        }
+        if($newUser['firstName']){
+            $oldUser->setFirstName($newUser['firstName']);
+        }
+        if($newUser['lastName']){
+            $oldUser->setLastName($newUser['lastName']);
+        }
+        if($newUser['dateOfBirth']){
+            $oldUser->setDateOfBirth($newUser['dateOfBirth']);
+        }
+        $this->managerRegistry->getManager()->flush();
+
+        return $oldUser;
+
     }
 }
