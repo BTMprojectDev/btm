@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Task;
 use App\Repository\TaskRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Routing\Annotation\Route;
+use FOS\RestBundle\Response;
 
 /**
  * @Route("/api/task", name="api_task")
@@ -18,11 +18,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class TaskController extends AbstractFOSRestController
 {
     private TaskRepository $taskRepository;
-    private EntityManager $entityManager;
+    private EntityManagerInterface $entityManager;
 
     public function __construct
     (
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         TaskRepository $taskRepository
     )
     {
@@ -50,9 +50,10 @@ class TaskController extends AbstractFOSRestController
 
     /**
      * @Rest\Post("", name="post_new_task")
-     * @ParamConverter("task", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"task"}, "version"="1.0"}}))
+     * @ParamConverter("task", converter="fos_rest.request_body")
+     * @Rest\View(statusCode= 200)
      */
-    public function add(Task $task)
+    public function add(Task $task) : Task
     {
         $this->entityManager->persist($task);
         $this->entityManager->flush();
