@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Persistence\ManagerRegistry;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -81,13 +82,38 @@ class UserController extends AbstractFOSRestController
         $oldUser = $this->userRepository->find($id);
         $newUser = $request->request->all();
 
-        dd();
+        $oldUser->setEmail($newUser['email']);
+
+        $plainPassword = $newUser['password'];
+        $hashedPassword = $this->userPasswordHasher->hashPassword(
+            $oldUser,
+            $plainPassword
+        );
+        $oldUser->setPassword($hashedPassword);
+
+        $oldUser->setLat($newUser['lat']);
+
+        $oldUser->setLng($newUser['lng']);
+
+        $oldUser->setPhotoUrl($newUser['photoUrl']);
+
+        $oldUser->setFirstName($newUser['firstName']);
+
+        $oldUser->setLastName($newUser['lastName']);
+
+        $date = new DateTimeImmutable($newUser['dateOfBirth']);
+        $oldUser->setDateOfBirth($date);
+
+        $this->managerRegistry->getManager()->flush();
+
+        return $oldUser;
 
     }
 
     /**
      * @Rest\Patch("/{id}", name="patch_by_user_id")
      * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @throws \Exception
      */
     public function patch(int $id, Request $request)
     {
@@ -120,7 +146,8 @@ class UserController extends AbstractFOSRestController
             $oldUser->setLastName($newUser['lastName']);
         }
         if($newUser['dateOfBirth']){
-            $oldUser->setDateOfBirth($newUser['dateOfBirth']);
+            $date = new DateTimeImmutable($newUser['dateOfBirth']);
+            $oldUser->setDateOfBirth($date);
         }
         $this->managerRegistry->getManager()->flush();
 
