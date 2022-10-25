@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +13,7 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -88,33 +90,19 @@ class TaskController extends AbstractFOSRestController
 
     /**
      * @Rest\Patch("", name="modify_task_by_id")
-     * @ParamConverter("task", converter="fos_rest.request_body")
      * @QueryParam(name="task_id", requirements="\d+", default="0", description="task_id")
-     * @Rest\View(statusCode=Response::HTTP_OK)
+     * @Rest\View(statusCode=Response::HTTP_CREATED)
      */
-    public function modify(Task $task)
+    public function modify(Request $request)
     {
         $id = $this->paramFetcher->get('task_id');
         $oldTask = $this->taskRepository->find($id);
+        $newTask = $request->request->all();
+        $form = $this->createForm(TaskType::class,$oldTask);
+        $form->submit($newTask,false);
 
-        if (!$oldTask) {
-            return new Response(Response::HTTP_NOT_FOUND);
-        }
-
-        if (!(is_null($task->getType()))) {
-            $oldTask->setType($task->getType());
-        }
-
-        if (!(is_null($task->getDescription()))) {
-            $oldTask->setDescription($task->getDescription());
-        }
-
-        if (!(is_null($task->getLocation()))) {
-            $oldTask->setLocation($task->getLocation());
-        }
-
-        if (!(is_null($task->getTime()))) {
-            $oldTask->setTime($task->getTime());
+        if(false === $form->isValid()){
+            dd($form->getErrors(true)->current());
         }
 
         $this->entityManager->flush();
@@ -122,24 +110,20 @@ class TaskController extends AbstractFOSRestController
 
     /**
      * @Rest\Put("", name="update_task_by_id")
-     * @ParamConverter("task", converter="fos_rest.request_body")
      * @QueryParam(name="task_id", requirements="\d+", default="0", description="task_id")
-     * @Rest\View(statusCode=Response::HTTP_OK)
+     * @Rest\View(statusCode=Response::HTTP_CREATED)
      */
-    public function change(Task $task)
+    public function change(Request $request)
     {
         $id = $this->paramFetcher->get('task_id');
         $oldTask = $this->taskRepository->find($id);
+        $newTask = $request->request->all();
+        $form = $this->createForm(TaskType::class,$oldTask);
+        $form->submit($newTask,false);
 
-        if (!$oldTask) {
-            return new Response(Response::HTTP_NOT_FOUND);
+        if(false === $form->isValid()){
+            dd($form->getErrors(true)->current());
         }
-
-        $oldTask
-            ->setType($task->getType())
-            ->setDescription($task->getDescription())
-            ->setLocation($task->getLocation())
-            ->setTime($task->getTime());
 
         $this->entityManager->flush();
     }
