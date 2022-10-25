@@ -87,7 +87,7 @@ class TaskController extends AbstractFOSRestController
     }
 
     /**
-     * @Rest\Patch("", name="update_task_by_id")
+     * @Rest\Patch("", name="modify_task_by_id")
      * @ParamConverter("task", converter="fos_rest.request_body")
      * @QueryParam(name="task_id", requirements="\d+", default="0", description="task_id")
      * @Rest\View(statusCode=Response::HTTP_OK)
@@ -135,13 +135,11 @@ class TaskController extends AbstractFOSRestController
             return new Response(Response::HTTP_NOT_FOUND);
         }
 
-        $oldTask->setType($task->getType());
-
-        $oldTask->setDescription($task->getDescription());
-
-        $oldTask->setLocation($task->getLocation());
-
-        $oldTask->setTime($task->getTime());
+        $oldTask
+            ->setType($task->getType())
+            ->setDescription($task->getDescription())
+            ->setLocation($task->getLocation())
+            ->setTime($task->getTime());
 
         $this->entityManager->flush();
     }
