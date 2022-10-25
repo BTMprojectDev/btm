@@ -11,6 +11,11 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        api_token_refresh:
+            pattern: ^/api/token/refresh
+            stateless: true
+            refresh_jwt: ~
+
         login:
             pattern: ^/api/login
             stateless: true
@@ -33,8 +38,8 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             jwt: ~
-            refresh_jwt:
-                check_path: api/token/refresh
+#            refresh_jwt:
+#                check_path: api/token/refresh
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
