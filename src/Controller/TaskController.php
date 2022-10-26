@@ -62,14 +62,22 @@ class TaskController extends AbstractFOSRestController
 
     /**
      * @Rest\Post("", name="post_task")
-     * @ParamConverter("task", converter="fos_rest.request_body")
-     * @RequestParam(name="user_id", requirements="\d+", description="User id")
+     * @RequestParam(name="userId", description="userId")
      * @Rest\View(statusCode=Response::HTTP_CREATED)
      */
-    public function add(Task $task)
+    public function add(Request $request)
     {
-        $user_id = $this->paramFetcher->get("user_id");
+        $user_id = $this->paramFetcher->get("userId");
         $user = $this->userRepository->find($user_id);
+        $task_data = $request->request->all();
+        unset($task_data['userId']);
+        $task = new Task();
+        $form = $this->createForm(TaskType::class, $task);
+        $form->submit($task_data, false);
+        if(false === $form->isValid()){
+            dd($form->getErrors(true)->current());
+        }
+
         $user->addTask($task);
         $this->entityManager->persist($task);
         $this->entityManager->flush();
