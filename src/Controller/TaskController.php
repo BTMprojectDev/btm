@@ -41,6 +41,7 @@ class TaskController extends AbstractFOSRestController
         $this->userRepository = $userRepository;
     }
 
+
     /**
      * @Rest\Get("", name="get_user_tasks")
      * @QueryParam(name="user_id", requirements="\d+", default="0", description="User id")
@@ -58,6 +59,7 @@ class TaskController extends AbstractFOSRestController
         if($task_id != 0){
             return $this->taskRepository->findBy(["id" => $task_id]);
         }
+
     }
 
     /**
@@ -136,3 +138,4 @@ class TaskController extends AbstractFOSRestController
         $this->entityManager->flush();
     }
 }
+
