@@ -19,7 +19,8 @@ class TaskType extends AbstractType
                 'input' => 'datetime',
                 'widget' => 'single_text'
             ))
-            ->add('user');
+            ->add('user')
+            ->add("title");
     }
 
     public function configureOptions(OptionsResolver $resolver): void
