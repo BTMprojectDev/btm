@@ -11,7 +11,7 @@ fos_rest:
     enabled: true
     rules:
       - { path: ^/api, prefer_extension: true, fallback_format: json, priorities: [ json ] }
-#      - { path: '^/api', priorities: json, fallback_format: json, attributes: { _controller: FOS\RestBundle\Controller\ExceptionController }, prefer_extension: false }
+#      - { path: '^/api', priorities: json, fallback_format: json, attributes: { _controller: FOS\RestBundle\Controller\ExceptionController }, prefer_extension: true }
       - { path: '^/', stop: true }
   versioning:
     enabled: true
