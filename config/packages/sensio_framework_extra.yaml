@@ -1,3 +1,10 @@
 sensio_framework_extra:
+<<<<<<< HEAD
   router:
     annotations: false
+=======
+    router:
+        annotations: false
+    request:
+        converters: true
+>>>>>>> d823b7a0a4852fc46934f1d93af96547b3c5c975

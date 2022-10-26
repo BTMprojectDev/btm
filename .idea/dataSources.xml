@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:mysql://localhost:33063/btm_dev</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="btm_dev@3.65.36.1" uuid="67dea2c4-400d-4c87-8bf9-ccf52a234068">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://3.65.36.1:33063/btm_dev</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

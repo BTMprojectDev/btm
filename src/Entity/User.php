@@ -31,7 +31,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Groups("get_user")
      */
     private $roles = [];
 
@@ -45,6 +44,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="user")
      */
     private $tasks;
+
+    /**
+     * @ORM\Column(type="float")
+     * @Groups("get_user")
+     */
+    private $lat;
+
+    /**
+     * @ORM\Column(type="float")
+     * @Groups("get_user")
+     */
+    private $lng;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("get_user")
+     */
+    private $photoUrl;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("get_user")
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups("get_user")
+     */
+    private $lastName;
+
+    /**
+     * @ORM\Column(type="date_immutable")
+     * @Groups("get_user")
+     */
+    private $dateOfBirth;
 
     public function __construct()
     {
@@ -166,6 +201,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $task->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLat(): ?float
+    {
+        return $this->lat;
+    }
+
+    public function setLat(float $lat): self
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    public function getLng(): ?float
+    {
+        return $this->lng;
+    }
+
+    public function setLng(float $lng): self
+    {
+        $this->lng = $lng;
+
+        return $this;
+    }
+
+    public function getPhotoUrl(): ?string
+    {
+        return $this->photoUrl;
+    }
+
+    public function setPhotoUrl(string $photoUrl): self
+    {
+        $this->photoUrl = $photoUrl;
+
+        return $this;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName(string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    public function getDateOfBirth(): ?\DateTimeImmutable
+    {
+        return $this->dateOfBirth;
+    }
+
+    public function setDateOfBirth(\DateTimeImmutable $dateOfBirth): self
+    {
+        $this->dateOfBirth = $dateOfBirth;
 
         return $this;
     }

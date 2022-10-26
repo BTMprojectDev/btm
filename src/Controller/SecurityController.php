@@ -2,13 +2,41 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class SecurityController extends AbstractController
+class SecurityController extends AbstractFOSRestController
 {
+    private UserRepository $userRepository;
+    private EntityManagerInterface $entityManager;
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(
+        UserPasswordHasherInterface $passwordHasher,
+        UserRepository $userRepository,
+        EntityManagerInterface $entityManager
+    )
+    {
+        $this->userRepository = $userRepository;
+        $this->entityManager = $entityManager;
+        $this->passwordHasher = $passwordHasher;
+    }
+
+
+
+
+
     /**
      * @Route("/login", name="app_login")
      */
@@ -28,5 +56,25 @@ class SecurityController extends AbstractController
     public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    }
+
+
+    /**
+     * @Rest\Post("api/register", name="api_register")
+     * @Rest\View(serializerGroups={"get_user"}, statusCode=Response::HTTP_CREATED)
+     * @ParamConverter("user", converter="fos_rest.request_body")
+     */
+    public function register(User $user): User
+    {
+        $plainPassword = $user->getPassword();
+        $hashedPass = $this->passwordHasher->hashPassword(
+            $user,
+            $plainPassword
+        );
+        $user->setPassword($hashedPass);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        return $user;
     }
 }

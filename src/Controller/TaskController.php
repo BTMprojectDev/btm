@@ -3,10 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+<<<<<<< HEAD
 use App\Form\TaskType;
 use App\Repository\TaskRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+=======
+use App\Entity\User;
+use App\Repository\TaskRepository;
+>>>>>>> d823b7a0a4852fc46934f1d93af96547b3c5c975
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
@@ -23,6 +28,7 @@ use Symfony\Component\HttpFoundation\Response;
 class TaskController extends AbstractFOSRestController
 {
     private TaskRepository $taskRepository;
+<<<<<<< HEAD
     private EntityManagerInterface $entityManager;
     private ParamFetcherInterface $paramFetcher;
     private UserRepository $userRepository;
@@ -39,6 +45,14 @@ class TaskController extends AbstractFOSRestController
         $this->entityManager = $entityManager;
         $this->paramFetcher = $paramFetcher;
         $this->userRepository = $userRepository;
+=======
+
+    public function __construct(
+        TaskRepository $taskRepository
+    )
+    {
+        $this->taskRepository = $taskRepository;
+>>>>>>> d823b7a0a4852fc46934f1d93af96547b3c5c975
     }
 
     /**
@@ -47,7 +61,11 @@ class TaskController extends AbstractFOSRestController
      * @QueryParam(name="task_id", requirements="\d+", default="0", description="Task id")
      * @Rest\View(serializerGroups={"task"}, statusCode=Response::HTTP_FOUND)
      */
+<<<<<<< HEAD
     public function tasks()
+=======
+    public function show(Task $task)
+>>>>>>> d823b7a0a4852fc46934f1d93af96547b3c5c975
     {
         $user_id = $this->paramFetcher->get("user_id");
         if($user_id != 0) {
@@ -74,6 +92,19 @@ class TaskController extends AbstractFOSRestController
         $this->entityManager->persist($task);
         $this->entityManager->flush();
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * @Rest\Get("", name="get_all")
+     * @Rest\View(serializerGroups={"task"})
+     */
+    public function all()
+    {
+        return $this->taskRepository->findAll();
+    }
+}
+>>>>>>> d823b7a0a4852fc46934f1d93af96547b3c5c975
 
     /**
      * @Rest\Delete("", name="del_by_id")
