@@ -34,14 +34,11 @@ fos_rest:
   format_listener:
     rules:
       - { path: ^/api, prefer_extension: true, fallback_format: json, priorities: [ json ] }
-<<<<<<< HEAD
       #- { path: ^/, priorities: [ 'html', '/'], fallback_format: ~, prefer_extension: true }
       - { path: '^/', priorities: ['text/html', '/'], fallback_format: html, prefer_extension: true }
   body_converter:
-=======
 #      - { path: '^/api', priorities: json, fallback_format: json, attributes: { _controller: FOS\RestBundle\Controller\ExceptionController }, prefer_extension: true }
       - { path: '^/', stop: true }
   versioning:
->>>>>>> d823b7a0a4852fc46934f1d93af96547b3c5c975
     enabled: true
     validate: true
