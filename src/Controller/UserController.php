@@ -4,9 +4,11 @@ namespace App\Controller;
 
 
 use App\Form\UserType;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\QueryParam;
@@ -17,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @Route("/api/user", name="api_user_")
@@ -29,14 +32,18 @@ class UserController extends AbstractFOSRestController
     private UserRepository $userRepository;
     private UserPasswordHasherInterface $userPasswordHasher;
     private ParamFetcherInterface $paramFetcher;
+    private UserPasswordHasherInterface $passwordHasher;
+    private EntityManagerInterface $entityManager;
 
     public function __construct
     (
         Security $security,
+	UserPasswordHasherInterface $passwordHasher,
         ManagerRegistry $managerRegistry,
         UserRepository $userRepository,
         UserPasswordHasherInterface $userPasswordHasher,
-        ParamFetcherInterface $paramFetcher
+        ParamFetcherInterface $paramFetcher,
+	EntityManagerInterface $entityManager
     )
     {
         $this->security = $security;
@@ -44,7 +51,31 @@ class UserController extends AbstractFOSRestController
         $this->userRepository = $userRepository;
         $this->userPasswordHasher = $userPasswordHasher;
         $this->paramFetcher = $paramFetcher;
+	$this->passwordHasher = $passwordHasher;
+	$this->entityManager = $entityManager;
     }
+
+
+/**
+     * @Rest\Post("/reg", name="api_register")
+     * @Rest\View(serializerGroups={"get_user"}, statusCode=Response::HTTP_CREATED)
+     * @ParamConverter("user", converter="fos_rest.request_body")
+     */
+    public function register(User $user): User
+    {
+        $plainPassword = $user->getPassword();
+        $hashedPass = $this->passwordHasher->hashPassword(
+            $user,
+            $plainPassword
+        );
+        $user->setPassword($hashedPass);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return $user;
+    }
+
+
+
 
     /**
      * @Rest\Get("", name="get")

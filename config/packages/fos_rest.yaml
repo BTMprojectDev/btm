@@ -1,18 +1,3 @@
-#fos_rest:
-#  param_fetcher_listener: true
-#  body_listener: true
-#  view:
-#    view_response_listener:  true
-#  format_listener:
-#    rules:
-#      - { path: ^/api, prefer_extension: true, fallback_format: json, priorities: [ json ] }
-#      #- { path: ^/, priorities: [ 'html', '/'], fallback_format: ~, prefer_extension: true }
-#      #- { path: '^/', priorities: ['text/html', '/'], fallback_format: html, prefer_extension: true }
-#  body_converter:
-#  #    - { path: '^/api', priorities: json, fallback_format: json, attributes: { _controller: FOS\RestBundle\Controller\ExceptionController }, prefer_extension: true }
-#  #    - { path: '^/', stop: true }
-#  versioning:
-#    enabled: true
 fos_rest:
   param_fetcher_listener: true
   body_converter:
