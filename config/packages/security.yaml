@@ -11,6 +11,10 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        register:
+            pattern: ^/api/user/reg
+            stateless: true
+
         api_token_refresh:
             pattern: ^/api/token/refresh
             stateless: true
@@ -59,6 +63,8 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/api/(login|token/refresh), roles: PUBLIC_ACCESS }
+#        - { path: ^/api,       roles: ROLE_USER }
+        - { path: ^/api/user/reg, roles: PUBLIC_ACCESS }
         - { path: ^/api,       roles: ROLE_USER }
 
 when@test:

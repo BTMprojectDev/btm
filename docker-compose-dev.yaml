@@ -11,7 +11,7 @@ services:
     environment:
       APP_ENV: dev
       APP_VERSION: dev
-      DATABASE_URL: mysql://root:@btm-mysql:3306/btm_dev
+      DATABASE_URL: mysql://admin:Tracer134@btm-db.cjc7oxh3vjzk.eu-central-1.rds.amazonaws.com:3306/btm-db
 
   btm-nginx:
     container_name: btm-nginx-dev
