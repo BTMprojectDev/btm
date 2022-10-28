@@ -38,12 +38,12 @@ class UserController extends AbstractFOSRestController
     public function __construct
     (
         Security $security,
-	UserPasswordHasherInterface $passwordHasher,
+	    UserPasswordHasherInterface $passwordHasher,
         ManagerRegistry $managerRegistry,
         UserRepository $userRepository,
         UserPasswordHasherInterface $userPasswordHasher,
         ParamFetcherInterface $paramFetcher,
-	EntityManagerInterface $entityManager
+	    EntityManagerInterface $entityManager
     )
     {
         $this->security = $security;
@@ -51,12 +51,12 @@ class UserController extends AbstractFOSRestController
         $this->userRepository = $userRepository;
         $this->userPasswordHasher = $userPasswordHasher;
         $this->paramFetcher = $paramFetcher;
-	$this->passwordHasher = $passwordHasher;
-	$this->entityManager = $entityManager;
+	    $this->passwordHasher = $passwordHasher;
+	    $this->entityManager = $entityManager;
     }
 
 
-/**
+    /**
      * @Rest\Post("/reg", name="api_register")
      * @Rest\View(serializerGroups={"get_user"}, statusCode=Response::HTTP_CREATED)
      * @ParamConverter("user", converter="fos_rest.request_body")
