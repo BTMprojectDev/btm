@@ -13,7 +13,6 @@ use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,45 +48,42 @@ class TaskController extends AbstractFOSRestController
      * @QueryParam(name="task_id", requirements="\d+", default="0", description="Task id")
      * @Rest\View(serializerGroups={"task"}, statusCode=Response::HTTP_FOUND)
      */
-    public function show()
+    public function tasks()
     {
         $user_id = $this->paramFetcher->get("user_id");
         if($user_id != 0) {
             return $this->taskRepository->findBy(["user" => $user_id]);
         }
 
-        return new JsonResponse(
-            null,
-            Response::HTTP_BAD_REQUEST
-        );
+        $task_id = $this->paramFetcher->get('task_id');
+        if($task_id != 0){
+            return $this->taskRepository->findBy(["id" => $task_id]);
+        }
+
     }
 
     /**
      * @Rest\Post("", name="post_task")
-     * @ParamConverter("task", converter="fos_rest.request_body")
-     * @RequestParam(name="user_id", requirements="\d+", description="User id")
+     * @RequestParam(name="userId", description="userId")
      * @Rest\View(statusCode=Response::HTTP_CREATED)
      */
-    public function add(Task $task)
+    public function add(Request $request)
     {
-        $user_id = $this->paramFetcher->get("user_id");
+        $user_id = $this->paramFetcher->get("userId");
         $user = $this->userRepository->find($user_id);
+        $task_data = $request->request->all();
+        unset($task_data['userId']);
+        $task = new Task();
+        $form = $this->createForm(TaskType::class, $task);
+        $form->submit($task_data, false);
+        if(false === $form->isValid()){
+            dd($form->getErrors(true)->current());
+        }
+
         $user->addTask($task);
         $this->entityManager->persist($task);
         $this->entityManager->flush();
     }
-
-
-    /**
-     * @Rest\Get("", name="get_all")
-     * @Rest\View(serializerGroups={"task"})
-     */
-    public function all()
-    {
-        return $this->taskRepository->findAll();
-    }
-
-
 
     /**
      * @Rest\Delete("", name="del_by_id")
@@ -105,7 +101,7 @@ class TaskController extends AbstractFOSRestController
     /**
      * @Rest\Patch("", name="modify_task_by_id")
      * @QueryParam(name="task_id", requirements="\d+", default="0", description="task_id")
-     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\View(statusCode=Response::HTTP_OK)
      */
     public function modify(Request $request)
     {
@@ -125,7 +121,7 @@ class TaskController extends AbstractFOSRestController
     /**
      * @Rest\Put("", name="update_task_by_id")
      * @QueryParam(name="task_id", requirements="\d+", default="0", description="task_id")
-     * @Rest\View(statusCode=Response::HTTP_CREATED)
+     * @Rest\View(statusCode=Response::HTTP_OK)
      */
     public function change(Request $request)
     {
@@ -142,3 +138,4 @@ class TaskController extends AbstractFOSRestController
         $this->entityManager->flush();
     }
 }
+

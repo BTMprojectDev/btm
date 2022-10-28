@@ -113,7 +113,7 @@ class UserController extends AbstractFOSRestController
     }
 
     /**
-     * @Rest\Put("/{id}", name="put_by_user_id")
+     * @Rest\Put("", name="put_by_user_id")
      * @QueryParam(name="user_id", requirements="\d+", description="user_id")
      * @Rest\View(statusCode=Response::HTTP_CREATED)
      */

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Form;
 
 use App\Entity\Task;
@@ -17,11 +16,10 @@ class TaskType extends AbstractType
             ->add('description')
             ->add('location')
             ->add('time', DateTimeType::class, array(
-                'input'=>'datetime',
-                'widget'=> 'single_text'
+                'input' => 'datetime',
+                'widget' => 'single_text'
             ))
-            ->add('user')
-        ;
+            ->add('user');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -31,4 +29,3 @@ class TaskType extends AbstractType
         ]);
     }
 }
-#test
