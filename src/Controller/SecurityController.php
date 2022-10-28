@@ -33,28 +33,6 @@ class SecurityController extends AbstractFOSRestController
         $this->passwordHasher = $passwordHasher;
     }
 
-
-
- /**
-     * @Rest\Post("api/registerasdasdasd", name="api_register")
-     * @Rest\View(serializerGroups={"get_user"}, statusCode=Response::HTTP_CREATED)
-     * @ParamConverter("user", converter="fos_rest.request_body")
-     */
-    public function register(User $user): User
-    {
-	dd('dupa');
-        $plainPassword = $user->getPassword();
-        $hashedPass = $this->passwordHasher->hashPassword(
-            $user,
-            $plainPassword
-        );
-        $user->setPassword($hashedPass);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-        return $user;
-    }
-
-
     /**
      * @Route("api/login", name="app_login")
      */
